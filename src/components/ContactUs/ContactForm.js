@@ -84,9 +84,8 @@ const ContactForm = ({ title, tagline }) => {
       <form
         name="contact-form"
         id="contact-form"
-        action="php/contact.php"
         method="POST"
-        className="mt-50"
+        className="mt-48"
       >
         <div className="messages"></div>
         <ReactWOW animation="fadeTop" delay="0.1s">
