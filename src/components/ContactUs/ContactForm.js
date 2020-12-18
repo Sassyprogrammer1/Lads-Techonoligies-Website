@@ -135,7 +135,7 @@ const ContactForm = ({ title, tagline }) => {
               name="message"
               className="form-control"
               id="message"
-              rows="7"
+              rows="6"
               placeholder="Your Message"
               required
               data-error="Please, Leave us a message"
