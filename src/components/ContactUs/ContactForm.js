@@ -6,18 +6,28 @@ require('dotenv').config();
 
 
 const ContactForm = ({ title, tagline }) => {
-  const [inputs, setInputs] = useState({});
-
+  const [inputs, setInputs] = useState({name:"",email:"",message:""});
+  const  [message, setMessage] = useState("");
+  
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setInputs({ ...inputs, [name]: value });
   };
+  console.log(inputs)
 
-   const submit = async (e) => {
+  const validateEmail = (email)=>{
+    const regex = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return regex.test(String(email).toLowerCase());
+    }
+  
+  const submit = async (e) => {
     e.preventDefault()
     
+     console.log("validate",validateEmail(inputs.email))
+   
+    if(inputs.name != "" && validateEmail(inputs.email)==true  && inputs.message != ""){
     
-    
+   
     const SESConfig = {
 
       apiVersion: "2010-12-01",
@@ -50,6 +60,13 @@ const ContactForm = ({ title, tagline }) => {
 
     new AWS.SES(SESConfig).sendEmail(params).promise().then((res) => {console.log(res);})
     console.log(inputs)
+    setMessage("Inquiry Submitted")
+    setTimeout(function(){ setMessage("") }, 3000);
+  }else{
+    setMessage("Incorrect Input")
+    setTimeout(function(){ setMessage("") }, 3000);
+  }
+
   };
 
   return (
@@ -67,9 +84,8 @@ const ContactForm = ({ title, tagline }) => {
       <form
         name="contact-form"
         id="contact-form"
-        action="php/contact.php"
         method="POST"
-        className="mt-50"
+        className="mt-48"
       >
         <div className="messages"></div>
         <ReactWOW animation="fadeTop" delay="0.1s">
@@ -130,14 +146,17 @@ const ContactForm = ({ title, tagline }) => {
           </div>
         </ReactWOW>
         <ReactWOW animation="fadeTop" delay="0.4s">
+        <p style={{color:"#fff"}}>{message}</p>
+        <br />
           <button
             
             className="btn btn-green btn-circle"
             onClick={submit}
+            type="submit"
           >
            Send
           </button>
-        
+          
         </ReactWOW>
       </form>
     </>
